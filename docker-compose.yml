@@ -1,0 +1,29 @@
+# docker-compose.yml
+version: '3.8'
+services:
+  server:
+    build: ./server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server/uploads:/app/uploads  # Persist uploads
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/crud_mern
+    depends_on:
+      - mongo
+
+  client:
+    build: ./client
+    ports:
+      - "3000:80"   # Maps port 3000 on host to port 80 in container
+
+  mongo:
+    image: mongo:4.4
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
